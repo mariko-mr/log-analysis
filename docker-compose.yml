@@ -1,0 +1,27 @@
+version: "3"
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: ./docker/app/Dockerfile
+    volumes:
+      - ./src:/var/www/html
+    depends_on:
+      - db
+
+  db:
+    build:
+      context: .
+      dockerfile: ./docker/db/Dockerfile
+    ports:
+      - "53306:3306"
+    volumes:
+      - ./docker/db/my.cnf:/etc/mysql/my.cnf
+      - ./databases/page_views:/var/lib/mysql-files/page_views
+      - mysql_data:/var/lib/mysql
+    env_file:
+      - ./docker/db/db-variables.env
+
+volumes:
+  mysql_data:
