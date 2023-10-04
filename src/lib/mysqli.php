@@ -20,13 +20,21 @@ function dbConnect()
     return $dbh;
 }
 
+/**
+ * ここを修正
+ * SQLのスタイルガイドに沿ってクエリを修正
+ */
 function getTopArticles($dbh)
 {
     $sql = <<< EOT
-    SELECT   domain_code, page_title, count_views
-    FROM     page_views
-    ORDER BY count_views DESC
-    LIMIT    :limit;
+    SELECT
+      domain_code, page_title, count_views
+    FROM
+      page_views
+    ORDER BY
+      count_views DESC
+    LIMIT
+      :limit;
 EOT;
 
     echo  PHP_EOL .
@@ -52,14 +60,23 @@ EOT;
     }
 }
 
+/**
+ * ここを修正
+ * SQLのスタイルガイドに沿ってクエリを修正
+ */
 function getDomainViews($dbh)
 {
     $sql = <<< EOT
-    SELECT   domain_code, count_views
-    FROM     page_views
-    WHERE    domain_code = :domain_code
-    ORDER BY count_views DESC
-    LIMIT    1;
+    SELECT
+      domain_code, count_views
+    FROM
+      page_views
+    WHERE
+      domain_code = :domain_code
+    ORDER BY
+      count_views DESC
+    LIMIT
+      1;
 EOT;
 
     echo  PHP_EOL .
