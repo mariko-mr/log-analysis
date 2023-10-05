@@ -12,7 +12,6 @@ function dbConnect()
 
     try {
         $dbh = new PDO($dbDatabase, $dbUserName, $dbPassword);
-        // echo '接続成功' . PHP_EOL;
     } catch (PDOException $e) {
         echo '接続失敗: ' . $e->getMessage() . PHP_EOL;
         exit();
@@ -20,10 +19,6 @@ function dbConnect()
     return $dbh;
 }
 
-/**
- * ここを修正
- * SQLのスタイルガイドに沿ってクエリを修正
- */
 function getTopArticles($dbh)
 {
     $sql = <<< EOT
@@ -60,10 +55,6 @@ EOT;
     }
 }
 
-/**
- * ここを修正
- * SQLのスタイルガイドに沿ってクエリを修正
- */
 function getDomainViews($dbh)
 {
     $sql = <<< EOT
