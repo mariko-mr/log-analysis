@@ -1,7 +1,7 @@
 <?php
 
 require __DIR__ . '/../vendor/autoload.php';
-require_once __DIR__ . '/../log_analysis.php';
+require_once __DIR__ . '/validate.php';
 
 function dbConnect()
 {
@@ -20,11 +20,6 @@ function dbConnect()
   return $dbh;
 }
 
-/**
- * ここを修正
- *
- * バリデーション処理を追加
- */
 function getTopArticles($dbh)
 {
   $sql = <<< EOT
@@ -38,10 +33,8 @@ function getTopArticles($dbh)
       :limit;
 EOT;
 
-  echo  PHP_EOL .
-    '最もビュー数の多い記事を表示します' . PHP_EOL .
-    '記事数を１以上の整数で指定してください: ';
-  $validatedLimit = validateLimit(trim(fgets(STDIN)));
+  // 標準入力よりLIMITの取得
+  $validatedLimit = getValidatedLimit();
 
   // クエリの実行
   try {
@@ -54,20 +47,9 @@ EOT;
   }
 
   // 最もビュー数の多い記事を表示する
-  while ($row = $sth->fetch(PDO::FETCH_ASSOC)) {
-    echo '”' . $row['domain_code'] . '”, ' .
-      '”' .  $row['page_title'] . '”, ' .
-      $row['count_views'] . PHP_EOL;
-  }
-
-  return selectTask();
+  showTopArticlesMsg($sth);
 }
 
-/**
- * ここを修正
- *
- * バリデーション処理を追加
- */
 function getDomainViews($dbh)
 {
   $sql = <<< EOT
@@ -90,10 +72,8 @@ EOT;
   $domainViews = [];
 
   while (empty($domainViews)) {
-    echo 'ドメインコードを指定してください(例: en de): ';
-
-    // ドメインコードを分割し、配列に格納
-    $domainCodes = explode(' ', trim(fgets(STDIN)));
+    // 標準入力よりドメインコードの取得
+    $domainCodes = createDomainCodesArray();
 
     // クエリの実行
     try {
@@ -117,10 +97,46 @@ EOT;
     }
   }
 
+  // 最もビュー数の多い記事を表示する
+  showDomainViewsMsg($domainViews);
+}
+
+
+function getValidatedLimit()
+{
+  echo  PHP_EOL .
+    '最もビュー数の多い記事を表示します' . PHP_EOL .
+    '記事数を１以上の整数で指定してください: ';
+
+  return validateLimit(trim(fgets(STDIN)));
+}
+
+function showTopArticlesMsg($sth)
+{
+  echo '----------------------------------------' . PHP_EOL;
+  while ($row = $sth->fetch(PDO::FETCH_ASSOC)) {
+    echo '”' . $row['domain_code'] . '”, ' .
+      '”' .  $row['page_title'] . '”, ' .
+      $row['count_views'] . PHP_EOL;
+  }
+  echo '----------------------------------------' . PHP_EOL;
+}
+
+
+function createDomainCodesArray()
+{
+  echo 'ドメインコードを指定してください(例: en de): ';
+
+  // ドメインコードを分割し、配列に格納
+  return explode(' ', trim(fgets(STDIN)));
+}
+
+function showDomainViewsMsg($domainViews)
+{
   // ドメインコードと合計ビューを表示
+  echo '----------------------------------------' . PHP_EOL;
   foreach ($domainViews as $code => $views) {
     echo '”' . $code . '”, ' . $views . PHP_EOL;
   }
-
-  return selectTask();
+  echo '----------------------------------------' . PHP_EOL;
 }
