@@ -1,16 +1,24 @@
 <?php
 
-require_once __DIR__ . '/lib/mysqli.php';
-
-$dbh = dbConnect();
-$validatedStdin = selectTask();
-startAnalyze($validatedStdin, $dbh);
+require_once __DIR__ . '/lib/sql.php';
+require_once __DIR__ . '/lib/validate.php';
 
 /**
- * ここを修正
- * バリデーション処理を追加
+ * ここを追加
  *
  */
+function startAnalyze()
+{
+    //DBに接続
+    $dbh = dbConnect();
+
+    $validatedStdin = '';
+
+    while ($validatedStdin !== '9') {
+        executeTask(selectTask(), $dbh);
+    }
+}
+
 /**
  * タスクを選択する
  *
@@ -31,17 +39,17 @@ function selectTask(): string
 
 /**
  * ここを修正
- *
- * 1, 2を選択している間はループするようにする
+ * 関数名を変更
  */
-function startAnalyze($validatedStdin, $dbh)
+/**
+ * 選択したタスクを実行する
+ */
+function executeTask($validatedStdin, $dbh)
 {
-    while ($validatedStdin !== '9') {
-        if ($validatedStdin === '1') {
-            $validatedStdin = getTopArticles($dbh);
-        } elseif ($validatedStdin === '2') {
-            $validatedStdin = getDomainViews($dbh);
-        }
+    if ($validatedStdin === '1') {
+        $validatedStdin = getTopArticles($dbh);
+    } elseif ($validatedStdin === '2') {
+        $validatedStdin = getDomainViews($dbh);
     }
 
     if ($validatedStdin === '9') {
@@ -50,31 +58,4 @@ function startAnalyze($validatedStdin, $dbh)
     }
 }
 
-/**
- * ここを追加
- */
-function validateStdin($stdin)
-{
-    $allowedNumbers  = ['1', '2', '9'];
-
-    // 入力値のバリデーション処理
-    while (!(in_array($stdin, $allowedNumbers))) {
-        echo '【1, 2, 9】のどれかを入力してください: ';
-        $stdin = trim(fgets(STDIN));
-    }
-    return $stdin;
-}
-
-/**
- * ここを追加
- */
-function validateLimit($stdin)
-{
-    // バリデーション処理を追加する
-    while (!(preg_match('/\A[1-9][0-9]*\z/', $stdin))) {
-        echo '記事数を１以上の整数で指定してください: ';
-        $stdin = trim(fgets(STDIN));
-    }
-
-    return $stdin;
-}
+startAnalyze();
