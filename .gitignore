@@ -5,7 +5,6 @@ databases
 docker/db/db-variables.env
 
 src/vendor
-
 src/.env
-
 src/tmp
+src/.phpunit.result.cache
