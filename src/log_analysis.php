@@ -4,10 +4,10 @@ require_once __DIR__ . '/lib/sql.php';
 require_once __DIR__ . '/lib/validate.php';
 
 /**
- * ここを追加
+ * 解析を開始する
  *
  */
-function startAnalyze()
+function startAnalyze(): void
 {
     //DBに接続
     $dbh = dbConnect();
@@ -22,12 +22,12 @@ function startAnalyze()
 /**
  * タスクを選択する
  *
- * @return string $stdin
+ * @return string $validatedStdin
  */
 function selectTask(): string
 {
     echo  PHP_EOL .
-        'Wikipediaのアクセスログを分析します。' . PHP_EOL . PHP_EOL .
+        '★Wikipediaのアクセスログを分析します。' . PHP_EOL . PHP_EOL .
         '1: 最もビュー数の多い記事を表示' . PHP_EOL .
         '2: 人気記事の合計ビュー数を表示' . PHP_EOL .
         '9: 終了する' . PHP_EOL . PHP_EOL .
@@ -38,18 +38,17 @@ function selectTask(): string
 }
 
 /**
- * ここを修正
- * 関数名を変更
- */
-/**
  * 選択したタスクを実行する
+ *
+ * @param string $validatedStdin
+ * @param PDO $dbh
  */
-function executeTask($validatedStdin, $dbh)
+function executeTask($validatedStdin, $dbh): void
 {
     if ($validatedStdin === '1') {
-        $validatedStdin = getTopArticles($dbh);
+        getTopArticles($dbh);
     } elseif ($validatedStdin === '2') {
-        $validatedStdin = getDomainViews($dbh);
+        getDomainViews($dbh);
     }
 
     if ($validatedStdin === '9') {
