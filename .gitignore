@@ -1,10 +1,12 @@
 PROJECT.md
 
-databases
-
 docker/db/db-variables.env
+
+databases/page_views
 
 src/vendor
 src/.env
 src/tmp
 src/.phpunit.result.cache
+
+image.png
