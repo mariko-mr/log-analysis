@@ -43,7 +43,7 @@ Wikipedia のアクセスログ情報を使用し、サイトの読者が好む�
 
 ### 環境変数の作成
 
-- `docker/db/db-variables.env` を作成します。
+- `docker/db/` の下に `db-variables.env` を作成します。
 
 ```shell
 # db-variables.env への記述例
@@ -53,44 +53,43 @@ MYSQL_ROOT_PASSWORD=pass
 MYSQL_USER=user
 ```
 
-- `src/.env` を作成します。
+- `src/` の下に `.env` を作成します。
 
 ```shell
+# .env への記述例
 DB_DATABASE="mysql:host=log_analysis-db-1;dbname=log_analysis;charset=utf8mb4"
 DB_USERNAME="user"
 DB_PASSWORD="pass"
 ```
 
 ### 環境構築
-
-- Docker コンテナを起動します。
+コマンドを実行して環境構築を行います。
+1. Docker コンテナを起動します。
 
 ```bash
-$ docker compose up -d --build
+docker compose up -d --build
 ```
 
-- Docker コンテナを立ち上げた後に Composer をインストールします。
+2. Docker コンテナを立ち上げた後に Composer をインストールします。
 
 ```bash
-$ docker compose exec app composer init
+docker compose exec app composer init
 ```
 
-- [phpdotenv](https://github.com/vlucas/phpdotenv) をインストールします。
+3. [phpdotenv](https://github.com/vlucas/phpdotenv) をインストールします。
 
 ```bash
-$ docker compose exec app composer require vlucas/phpdotenv
+docker compose exec app composer require vlucas/phpdotenv
 ```
 
 ### DB データベースとテーブルの作成
-
-下記のコマンドを実行しデータベースとテーブルを作成します。これには少々時間がかかります。
-
+下記のコマンドを実行し、データベースとテーブルを作成します。これには少々時間がかかります。
 ```bash
 docker compose exec app php database/initialize_table.php
 ```
 
 ### ログ解析を実行する
-
+下記のコマンドを実行し、ログ解析を開始します。
 ```bash
 docker compose exec app php log_analysis.php
 ```
@@ -134,7 +133,7 @@ docker compose exec app php log_analysis.php
 
 ### ログ解析を終了する
 
-Docker コンテナを停止します。
+下記のコマンドを実行し、Docker コンテナを停止します。
 
 ```bash
 docker compose stop
