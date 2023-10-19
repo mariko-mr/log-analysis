@@ -63,7 +63,11 @@ DB_PASSWORD="pass"
 ```
 
 ### 環境構築
+
 コマンドを実行して環境構築を行います。
+
+#### Docker
+
 1. Docker コンテナを起動します。
 
 ```bash
@@ -82,14 +86,55 @@ docker compose exec app composer init
 docker compose exec app composer require vlucas/phpdotenv
 ```
 
-### DB データベースとテーブルの作成
-下記のコマンドを実行し、データベースとテーブルを作成します。これには少々時間がかかります。
+#### MySQL
+
+1. 下記のコマンドを実行し、MySQL コンテナの中に入って作業します。
+
+```bash
+docker compose exec db mysql -p
+```
+
+2. 下記が表示されるので`pass`と入力し Enter を押します。
+
+```sql
+mysql: [Warning] World-writable config file '/etc/mysql/my.cnf' is ignored.
+Enter password:
+```
+
+3. 下記のステートメントを実行し、ファイル権限を付与します。
+
+```sql
+GRANT FILE ON `log_analysis`.* TO 'user'@'%';
+```
+
+4. 下記のコマンドを実行し、MySQL を終了します。
+
+```sql
+exit;
+```
+
+### DB テーブルの作成
+
+下記のコマンドを実行し、テーブルを作成します。これには少々時間がかかります。
+
 ```bash
 docker compose exec app php database/initialize_table.php
 ```
 
+#### テーブル内容
+
+| domain_code | page_title           | count_views | total_response_size |
+| ----------: | -------------------- | ----------- | ------------------- |
+|          aa | Main_Page            | 4           | 0                   |
+|          aa | Wikipedia            | 1           | 0                   |
+|          aa | Wikipedia:Statistics | 1           | 0                   |
+|        aa.b | Main_Page            | 1           | 0                   |
+|        aa.d | Main_Page            | 4           | 0                   |
+
 ### ログ解析を実行する
+
 下記のコマンドを実行し、ログ解析を開始します。
+
 ```bash
 docker compose exec app php log_analysis.php
 ```
