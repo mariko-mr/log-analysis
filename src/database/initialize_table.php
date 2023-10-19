@@ -2,37 +2,14 @@
 
 require_once __DIR__ . '/../lib/sql.php';
 
+/**
+ * ここを修正
+ * createDatabase($dbh)を削除
+ * changeDatabase($dbh)を削除
+ */
 $dbh = dbConnect();
-createDatabase($dbh);
-changeDatabase($dbh);
 createTable($dbh);
 loadWikiLog($dbh);
-
-function createDatabase($dbh)
-{
-    $sql = 'CREATE DATABASE IF NOT EXISTS log_analysis;';
-
-    try {
-        $dbh->exec($sql);
-        echo "データベース 'log_analysis' の作成に成功しました。" . PHP_EOL;
-    } catch (PDOException $e) {
-        echo "データベース 'log_analysis' の作成に失敗しました。: " . $e->getMessage() . PHP_EOL;
-        exit();
-    }
-}
-
-function changeDatabase($dbh)
-{
-    $sql = 'USE log_analysis;';
-
-    try {
-        $dbh->exec($sql);
-        echo "データベースを 'log_analysis' に切り替えました。" . PHP_EOL;
-    } catch (PDOException $e) {
-        echo 'データベースの切り替えに失敗しました。: ' . $e->getMessage() . PHP_EOL;
-        exit();
-    }
-}
 
 function createTable($dbh)
 {
