@@ -104,7 +104,7 @@ Enter password:
 3. 下記のステートメントを実行し、ファイル権限を付与します。
 
 ```sql
-GRANT FILE ON `log_analysis`.* TO 'user'@'%';
+GRANT FILE ON *.* TO 'user'@'%';
 ```
 
 4. 下記のコマンドを実行し、MySQL を終了します。
